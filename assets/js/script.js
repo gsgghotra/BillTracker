@@ -1,1 +1,1 @@
-console.log("Bill Tracker")
+console.log("Bill Tracker");
