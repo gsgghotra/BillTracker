@@ -23,8 +23,8 @@ const britishGas = async () => {
       // Wait for the continue button to be present
       await page.waitForSelector('.emailInput_emailInput__f_Zud');
 
-      // Evaluate in the context of the page
-      const btnValue2 = await page.evaluate(() => {
+      // Enter the password
+      await page.evaluate(() => {
           const continueBtn = document.querySelector('.emailInput_emailInput__f_Zud');
           if (continueBtn) {
               // Get the first child of continueBtn
@@ -36,14 +36,28 @@ const britishGas = async () => {
 
                   if (lastChild) {
                       console.log(lastChild);
-
                       // Click on the last child of continueBtn
                       lastChild.click();
+                      return true;
+                      
                   }
               }
           }
-          return null;
       });
+
+      // 5 Seconds delay for password page to load
+
+      await page.waitForTimeout(5000); // Add a 5-second delay
+
+      //Enter the password
+      await page.evaluate((password) => {
+        const getForm = document.querySelector("#loginForm").nextSibling.firstChild.shadowRoot.children[0].lastElementChild.lastChild;
+        //console.log("Finally", getForm);
+        if (getForm) {
+            getForm.value = password;
+        }
+      }, process.env.BRITISH_GAS_PASSWORD);
+
   } catch (error) {
       console.error('An error occurred:', error);
   } finally {
