@@ -1,6 +1,57 @@
 import puppeteer from "puppeteer";
 import 'dotenv/config';
 
+const britishGas = async () => {
+  const browser = await puppeteer.launch({
+      headless: false,
+      defaultViewport: null,
+  });
+
+  const page = await browser.newPage();
+  try {
+      await page.goto("https://www.britishgas.co.uk/identity/", {
+          waitUntil: "domcontentloaded",
+      });
+      // Wait for the email field to be present
+      await page.waitForSelector('#loginForm-email');
+      await page.click('#loginForm-email');
+      // Simulate typing into the email input field
+      await page.type('#loginForm-email', process.env.BRITISH_GAS_EMAIL);
+
+      // Add a 5-second delay
+      await page.waitForTimeout(5000);
+      // Wait for the continue button to be present
+      await page.waitForSelector('.emailInput_emailInput__f_Zud');
+
+      // Evaluate in the context of the page
+      const btnValue2 = await page.evaluate(() => {
+          const continueBtn = document.querySelector('.emailInput_emailInput__f_Zud');
+          if (continueBtn) {
+              // Get the first child of continueBtn
+              const firstChild = continueBtn.firstElementChild;
+
+              if (firstChild) {
+                  // Get the last child of the first child
+                  const lastChild = firstChild.lastElementChild;
+
+                  if (lastChild) {
+                      console.log(lastChild);
+
+                      // Click on the last child of continueBtn
+                      lastChild.click();
+                  }
+              }
+          }
+          return null;
+      });
+  } catch (error) {
+      console.error('An error occurred:', error);
+  } finally {
+      // Close the browser
+      // await browser.close();
+  }
+};
+
 const affinitywater = async () => {
    // Launch Puppeteer in headless mode
    const browser = await puppeteer.launch({ headless: false });
@@ -61,7 +112,7 @@ const affinitywater = async () => {
       });
 
       // Log the scraped data
-      console.log('Scraped data:', data);
+      console.log('Due Amount:', data);
   } catch (error) {
       console.error('An error occurred:', error);
   } finally {
@@ -71,4 +122,5 @@ const affinitywater = async () => {
 };
 
 // Start the login and scraping process
-affinitywater();
+britishGas();
+//affinitywater();
