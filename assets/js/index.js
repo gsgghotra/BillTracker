@@ -2,68 +2,96 @@ import puppeteer from "puppeteer";
 import 'dotenv/config';
 
 const britishGas = async () => {
-  const browser = await puppeteer.launch({
-      headless: false,
-      defaultViewport: null,
-  });
+const browser = await puppeteer.launch({
+    headless: false,
+    defaultViewport: null,
+});
 
-  const page = await browser.newPage();
-  try {
-      await page.goto("https://www.britishgas.co.uk/identity/", {
-          waitUntil: "domcontentloaded",
-      });
-      // Wait for the email field to be present
-      await page.waitForSelector('#loginForm-email');
-      await page.click('#loginForm-email');
-      // Simulate typing into the email input field
-      await page.type('#loginForm-email', process.env.BRITISH_GAS_EMAIL);
+const page = await browser.newPage();
+try {
+    await page.goto("https://www.britishgas.co.uk/identity/", {
+        waitUntil: "domcontentloaded",
+    });
+    // Wait for the email field to be present
+    await page.waitForSelector('#loginForm-email');
+    await page.click('#loginForm-email');
+    // Simulate typing into the email input field
+    await page.type('#loginForm-email', process.env.BRITISH_GAS_EMAIL);
 
-      // Add a 5-second delay
-      await page.waitForTimeout(5000);
-      // Wait for the continue button to be present
-      await page.waitForSelector('.emailInput_emailInput__f_Zud');
+    // Add a 5-second delay
+    await page.waitForTimeout(5000);
+    // Wait for the continue button to be present
+    await page.waitForSelector('.emailInput_emailInput__f_Zud');
 
-      // Enter the password
-      await page.evaluate(() => {
-          const continueBtn = document.querySelector('.emailInput_emailInput__f_Zud');
-          if (continueBtn) {
-              // Get the first child of continueBtn
-              const firstChild = continueBtn.firstElementChild;
+    // Enter the password
+    await page.evaluate(() => {
+        const continueBtn = document.querySelector('.emailInput_emailInput__f_Zud');
+        if (continueBtn) {
+            // Get the first child of continueBtn
+            const firstChild = continueBtn.firstElementChild;
 
-              if (firstChild) {
-                  // Get the last child of the first child
-                  const lastChild = firstChild.lastElementChild;
+            if (firstChild) {
+                // Get the last child of the first child
+                const lastChild = firstChild.lastElementChild;
 
-                  if (lastChild) {
-                      console.log(lastChild);
-                      // Click on the last child of continueBtn
-                      lastChild.click();
-                      return true;
-                      
-                  }
-              }
-          }
-      });
+                if (lastChild) {
+                    console.log(lastChild);
+                    // Click on the last child of continueBtn
+                    lastChild.click();
+                    return true;
+                    
+                }
+            }
+        }
+    });
+
+
+      // PASSWORD SECTION
 
       // 5 Seconds delay for password page to load
-
       await page.waitForTimeout(5000); // Add a 5-second delay
 
-      //Enter the password
-      await page.evaluate((password) => {
-        const getForm = document.querySelector("#loginForm").nextSibling.firstChild.shadowRoot.children[0].lastElementChild.lastChild;
-        //console.log("Finally", getForm);
-        if (getForm) {
-            getForm.value = password;
-        }
-      }, process.env.BRITISH_GAS_PASSWORD);
+            // Enter the password
+        await page.evaluate(async (password) => {
+            const getForm = document.querySelector("#loginForm").nextSibling.firstChild.shadowRoot.children[0].lastElementChild.lastChild;
+            let btn = document.querySelector("#loginForm").nextSibling.lastChild.shadowRoot.children[0];
 
-  } catch (error) {
-      console.error('An error occurred:', error);
-  } finally {
-      // Close the browser
-      // await browser.close();
-  }
+            if (getForm) {
+                // Clear the existing value (if any)
+                getForm.value = '';
+
+                // Simulate typing the entire password at once
+                getForm.value = password;
+
+                // Dispatch an input event
+                getForm.dispatchEvent(new Event('input', { bubbles: true }));
+
+                // Wait for 5 seconds
+                await new Promise(resolve => setTimeout(resolve, 5000));
+
+                // Click the button
+                //console.log("Btn clicked", getForm.value);
+                // Uncomment the following line if you want to click the button
+                btn.click();
+            }
+        }, process.env.BRITISH_GAS_PASSWORD);
+
+        // SCRAPING SECTION
+        await page.waitForTimeout(5000); // Add a 5-second delay
+
+        //Enter the password
+        await page.evaluate(() => {
+        let getAccountNumber  = document.querySelector(".enlighten").innerText;
+            if (getAccountNumber) {
+                return getAccountNumber;
+            }
+        });
+    } catch (error) {
+        console.error('An error occurred:', error);
+    } finally {
+        // Close the browser
+        // await browser.close();
+    }
 };
 
 const affinitywater = async () => {
