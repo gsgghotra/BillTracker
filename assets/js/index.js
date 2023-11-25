@@ -4,6 +4,9 @@ import 'dotenv/config';
 const Returneddata = [
     {
         "BritishGas": "Empty"
+    },
+    {
+        "AffinityWater": "Empty"
     }
 ]
 const britishGas = async () => {
@@ -101,83 +104,92 @@ const britishGas = async () => {
 
 
 const affinitywater = async () => {
-   // Launch Puppeteer in headless mode
-   const browser = await puppeteer.launch({ headless: false });
-   const page = await browser.newPage();
+    return new Promise(async (resolve, reject) => {
+        // Launch Puppeteer in headless mode
+        const browser = await puppeteer.launch({ headless: false });
+        const page = await browser.newPage();
 
-  try {
-      // Navigate to the Affinity Water login page
-      await page.goto('https://myonlineaccount.affinitywater.co.uk/Account/Login?ReturnUrl=%2F', {
-          waitUntil: 'domcontentloaded',
-      });
+        try {
+            // Navigate to the Affinity Water login page
+            await page.goto('https://myonlineaccount.affinitywater.co.uk/Account/Login?ReturnUrl=%2F', {
+                waitUntil: 'domcontentloaded',
+            });
 
-      // Wait for the login form to be visible
-      await page.waitForSelector('#Email');
+            // Wait for the login form to be visible
+            await page.waitForSelector('#Email');
 
-      // Fill in the login form with your credentials
-      await page.type('#Email', process.env.AFFINITY_WATER_USERNAME);
-      await page.type('#Password', process.env.AFFINITY_WATER_PASSWORD);
+            // Fill in the login form with your credentials
+            await page.type('#Email', process.env.AFFINITY_WATER_USERNAME);
+            await page.type('#Password', process.env.AFFINITY_WATER_PASSWORD);
 
-      // Click the login button
-      await page.click('.btn-login');
+            // Click the login button
+            await page.click('.btn-login');
 
-      // Wait for navigation to complete after clicking the login button
-      await page.waitForNavigation();
+            // Wait for navigation to complete after clicking the login button
+            await page.waitForNavigation();
 
-      // Add a 10-second delay
-      await new Promise(resolve => setTimeout(resolve, 10000));
+            // Add a 10-second delay
+            await new Promise(resolve => setTimeout(resolve, 10000));
 
-      // Example: Extract data from the page
-      const data = await page.evaluate(() => {
-          // Add your scraping logic here
-          // For example, you can use document.querySelector to select elements and extract data
+            // Example: Extract data from the page
+            const data = await page.evaluate(() => {
+                // Add your scraping logic here
+                // For example, you can use document.querySelector to select elements and extract data
 
-          // Check if the URL matches the expected URL after successful login
-          if (window.document.URL === 'https://myonlineaccount.affinitywater.co.uk/') {
-              // Remove any unwanted modal
-              let modal = document.getElementById('water-quiz-modal');
-              let modalBackdrop = document.querySelector('.modal-backdrop');
+                // Check if the URL matches the expected URL after successful login
+                if (window.document.URL === 'https://myonlineaccount.affinitywater.co.uk/') {
+                    // Remove any unwanted modal
+                    let modal = document.getElementById('water-quiz-modal');
+                    let modalBackdrop = document.querySelector('.modal-backdrop');
 
-              if (modal) {
-                  modal.remove();
-              }
-              if (modalBackdrop) {
-                  modalBackdrop.remove();
-              }
+                    if (modal) {
+                        modal.remove();
+                    }
+                    if (modalBackdrop) {
+                        modalBackdrop.remove();
+                    }
 
-              // Get the value of the element
-              let amountElement = document.querySelector('.site_Next_Payment_Due_value');
-              if (amountElement) {
-                  return amountElement.innerText;
-              } else {
-                  console.error('Element not found. Check the selector.');
-                  return null;
-              }
-          } else {
-              console.error('Unexpected URL after login.');
-              return null;
-          }
-      });
+                    // Get the value of the element
+                    let amountElement = document.querySelector('.site_Next_Payment_Due_value');
+                    if (amountElement) {
+                        return amountElement.innerText;
+                    } else {
+                        console.error('Element not found. Check the selector.');
+                        return null;
+                    }
+                } else {
+                    console.error('Unexpected URL after login.');
+                    return null;
+                }
+            });
 
-      // Log the scraped data
-      console.log('Due Amount:', data);
-  } catch (error) {
-      console.error('An error occurred:', error);
-  } finally {
-      // Close the browser
-      await browser.close();
-  }
+            // Log the scraped data
+            resolve(data);
+        } catch (error) {
+            console.error('An error occurred:', error);
+        } finally {
+            // Close the browser
+            await browser.close();
+        }
+    });
 };
 
-// Example usage:
-britishGas()
+// britishGas()
+//     .then(result => {
+//         Returneddata[0].BritishGas = result;
+//         console.log(Returneddata[0])
+//     })
+//     .catch(error => {
+//         console.error('An error occurred:', error);
+//     });
+//affinitywater;
+
+affinitywater()
     .then(result => {
-        Returneddata[0].BritishGas = result;
+        Returneddata[0].AffinityWater = result;
         console.log(Returneddata[0])
     })
     .catch(error => {
         console.error('An error occurred:', error);
     });
-//affinitywater();
-
 
