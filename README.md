@@ -9,7 +9,7 @@ BillTracker simplifies financial life by consolidating bills from various provid
 
 *Mobile First Focus*
 
-<img src="![Alt text](frontend/src/images/MobileFirstDesign.png)" height="400">
+<img src="./frontend/src/images/Designidea.png" height="400">
 
 ## Contact Information
 
