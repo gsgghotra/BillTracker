@@ -13,7 +13,6 @@ const Returneddata = [
         "AffinityWater": "Empty"
     }
 ]
-
 //Organise the scrapers and DB management
 const scrapersManager = async () => {
     try{
