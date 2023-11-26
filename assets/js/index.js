@@ -1,5 +1,6 @@
 import puppeteer from "puppeteer";
 import 'dotenv/config';
+import db from "./firebase.js";
 
 const Returneddata = [
     {
@@ -174,18 +175,18 @@ const affinitywater = async () => {
     });
 };
 
-// britishGas()
-//     .then(result => {
-//         Returneddata[0].BritishGas = result;
-//         console.log(Returneddata[0])
-//     })
-//     .catch(error => {
-//         console.error('An error occurred:', error);
-//     });
-//affinitywater;
+britishGas()
+    .then(result => {
+        Returneddata[0].BritishGas = result;
+        console.log(Returneddata[0])
+    })
+    .catch(error => {
+        console.error('An error occurred:', error);
+    });
+affinitywater;
 
 affinitywater()
-    .then(result => {
+    .then( async (result) => {
         Returneddata[0].AffinityWater = result;
         console.log(Returneddata[0])
     })
@@ -193,3 +194,26 @@ affinitywater()
         console.error('An error occurred:', error);
     });
 
+const addBills = {
+    affinitywaterStatus: Returneddata[0].AffinityWater,
+    BritishGasStatus: Returneddata[0].BritishGas,
+    };
+
+    // Specify the collection and document ID
+    const collectionName = 'users';
+    const documentId = 'user_id'; // replace with the actual document ID
+    
+    // Reference to the collection and document
+    const collectionRef = db.collection(collectionName);
+    const documentRef = collectionRef.doc(documentId);
+    
+    
+
+// Add the document to the collection
+documentRef.set(addBills)
+.then(() => {
+    console.log('Bills added successfully.');
+})
+.catch((error) => {
+    console.error('Error adding Bills:', error);
+});

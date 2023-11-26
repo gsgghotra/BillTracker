@@ -7,4 +7,10 @@ node_modules
 #Ignore specific file
 *.env
 
+#Ignore the JavaScript file
+
 *tests.js
+
+#Firebase Credentails
+*creds.json
+*firebase.js
