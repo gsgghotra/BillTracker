@@ -35,7 +35,7 @@ const scrapersManager = async () => {
 
         // Specify the collection and document ID
         const collectionName = 'users';
-        const documentId = 'gurjeet'; // replace with the actual document ID
+        const documentId = 'gurjeetsingh'; // replace with the actual document ID
 
         // Reference to the collection and document
         const collectionRef = db.collection(collectionName);

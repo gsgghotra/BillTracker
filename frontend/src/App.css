@@ -42,7 +42,9 @@
 .navbar{
   background-color:#1A1A40;
   color: #ffffff;
-  box-shadow: 0 4px 2px -2px gray;
+  box-shadow: 0 4px 2px -2px rgb(14, 13, 13);
+  position: fixed;
+  width: 100%;
 
 }
 

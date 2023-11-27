@@ -72,22 +72,34 @@ const BritishGas = async () => {
 
             // SCRAPING SECTION
             await page.waitForTimeout(5000); // Add a 5-second delay
+
+            //Go to new page
+            await page.goto("https://www.britishgas.co.uk/energy-account/accounts/6122862/bills-and-payments", {
+                waitUntil: "domcontentloaded",
+            });
+            
+            await page.waitForTimeout(5000);
+            //Find the Price
+
             // Scrape Data
             const scrapedData = await page.evaluate(() => {
-                let getAccountNumber = document.querySelector(".enlighten").innerText;
-                if (getAccountNumber) {
+                //let getAccountNumber = document.querySelector(".enlighten").innerText;
+                let targetContainer = document.getElementsByTagName('ns-price');
+                if (targetContainer) {
                     //console.log(getAccountNumber);
-                    return getAccountNumber;
+                    let priceFind = targetContainer[0].shadowRoot.children[0].innerText;
+                    return priceFind;
                 }
                 return null; // Return null if the element is not found
             });
+
             resolve(scrapedData);
         } catch (error) {
             console.error('An error occurred:', error);
             return null;
         } finally {
             // Close the browser
-            //await browser.close();
+            await browser.close();
         }
     });
 };
