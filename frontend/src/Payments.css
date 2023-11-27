@@ -1,0 +1,25 @@
+.container-fluid{
+    margin-top: 40px;
+    max-width: 550px;
+}
+.first-space{
+    margin-top: 120px !important;
+}
+.heading{
+    width: 90%;
+    margin: 10px auto;
+    color: white;
+    text-align: left;
+    font-size: 16px;
+    padding-bottom: 5px;
+}
+.card{
+    width: 90%;
+    display: flex;
+    margin: 10px auto;
+    color: white;
+    border: 1px solid #1a1a40;
+    border-radius: 3px;
+    background: rgb(26 26 64);
+    box-shadow: rgb(111 111 111 / 50%) 0px 0px 5px 0px, rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+}
