@@ -11,6 +11,10 @@ BillTracker simplifies financial life by consolidating bills from various provid
 
 <img src="./frontend/src/images/Designidea.png" height="400">
 
+- Future Idea
+
+<img src="./frontend/src/images/ScreenshotDashboard.png">
+
 ## Contact Information
 
 - **Email**: gsgghotra@gmail.com
